@@ -7,7 +7,7 @@ import discord4j.core.object.entity.channel.MessageChannel;
 public class BotMain {
 
     public static void main(String[] args) {
-        final String token = "OTUzNjMwNzE1MTA5NjA1Mzk2.YjHX0A.6fzY6SZIsfqLBBJXGBjJ859CWfs";
+        final String token = args[0];
         final DiscordClient client = DiscordClient.create(token);
         final GatewayDiscordClient gateway = client.login().block();
 
@@ -20,6 +20,7 @@ public class BotMain {
         });
 
         gateway.onDisconnect().block();
+
     }
 }
 

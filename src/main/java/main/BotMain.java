@@ -60,18 +60,22 @@ public class BotMain {
 
         //LISTAR FICHEROS
 
-        String directorio = System.getProperty("/home/dam1/Documentos/ENDERMAITER/COD/BotDiscord/src/main/java/images");
+        String directorio = "/home/dam1/Documentos/ENDERMAITER/COD/BotDiscord/src/main/java/images";
         File carpeta = new File(directorio);
         String[] listado = carpeta.list();
         gateway.on(MessageCreateEvent.class).subscribe(event -> {
             final Message message = event.getMessage();
             if ("/list".equals(message.getContent())) {
-                final MessageChannel channel = message.getChannel().block();
-                channel.createMessage().block();
+                for(int i=0;i< listado.length;i++){
+                    final MessageChannel channel = message.getChannel().block();
+                    channel.createMessage(listado[i]).block();
+                    }
                 }
             });
 
         //OBTENER IMAGEN
+
+
 
         gateway.onDisconnect().block();
     }

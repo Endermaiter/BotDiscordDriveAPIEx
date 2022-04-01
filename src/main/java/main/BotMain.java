@@ -1,13 +1,14 @@
+package main;
+
 import discord4j.common.util.Snowflake;
 import discord4j.core.DiscordClient;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Message;
-import discord4j.core.object.entity.channel.GuildMessageChannel;
 import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.core.spec.EmbedCreateSpec;
-import discord4j.core.spec.MessageCreateSpec;
 import discord4j.rest.util.Color;
+import java.io.File;
 
 import java.time.Instant;
 
@@ -53,8 +54,28 @@ public class BotMain {
             }
         });
 
+        //GIFS
+
+
+
+        //LISTAR FICHEROS
+
+        String directorio = System.getProperty("/home/dam1/Documentos/ENDERMAITER/COD/BotDiscord/src/main/java/images");
+        File carpeta = new File(directorio);
+        String[] listado = carpeta.list();
+        gateway.on(MessageCreateEvent.class).subscribe(event -> {
+            final Message message = event.getMessage();
+            if ("/list".equals(message.getContent())) {
+                final MessageChannel channel = message.getChannel().block();
+                channel.createMessage().block();
+                }
+            });
+
+        //OBTENER IMAGEN
+
         gateway.onDisconnect().block();
     }
+
 }
 
 

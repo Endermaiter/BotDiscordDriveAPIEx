@@ -19,9 +19,7 @@ public class BotMain {
         final DiscordClient client = DiscordClient.create(token);
         final GatewayDiscordClient gateway = client.login().block();
 
-
-
-        //ping pong
+        //ping pong(funcional)
 
         gateway.on(MessageCreateEvent.class).subscribe(event -> {
             final Message message = event.getMessage();
@@ -31,21 +29,21 @@ public class BotMain {
             }
         });
 
-        //EMBED
+        //EMBED(Funcional)
 
         EmbedCreateSpec embed = EmbedCreateSpec.builder()
                 .color(Color.BLUE)
                 .title("Title")
-                .url("https://discord4j.com")
-                .author("EL MARCOS TODO UN CAPO", "https://discord4j.com", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDFFi8xZQpVW3GJRv2geK9u54vbbGlXYn4IA&usqp=CAU")
+                .url("https://es.wikipedia.org/wiki/Lionel_Messi")
+                .author("EL MARCOS TODO UN CAPO", "https://es.wikipedia.org/wiki/Lionel_Messi", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDFFi8xZQpVW3GJRv2geK9u54vbbGlXYn4IA&usqp=CAU")
                 .description("FORTINAITI LABABAYÈ")
                 .thumbnail("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDFFi8xZQpVW3GJRv2geK9u54vbbGlXYn4IA&usqp=CAU")
-                .addField("FUCHEBOL", "fuchebol", false)
-                .addField("\u200B", "\u200B", false)
+                .addField("FUCHEBOL", "fuchebol", true)
+                .addField("\u200B", "\u200B", true)
                 .addField("MESSI", "messi", true)
                 .image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDFFi8xZQpVW3GJRv2geK9u54vbbGlXYn4IA&usqp=CAU")
                 .timestamp(Instant.now())
-                .footer("footer", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDFFi8xZQpVW3GJRv2geK9u54vbbGlXYn4IA&usqp=CAU")
+                .footer("Fuchebol", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDFFi8xZQpVW3GJRv2geK9u54vbbGlXYn4IA&usqp=CAU")
                 .build();
 
         gateway.on(MessageCreateEvent.class).subscribe(event -> {
@@ -56,7 +54,7 @@ public class BotMain {
             }
         });
 
-        //GIFS
+        //GIFS(Funcional)
 
         EmbedCreateSpec embedGIF = EmbedCreateSpec.builder()
                 .image("https://c.tenor.com/ZU3owNOylsEAAAAC/el-baile-de-el-troleo.gif")
@@ -69,7 +67,7 @@ public class BotMain {
             }
         });
 
-        //LISTAR FICHEROS
+        //LISTAR FICHEROS(Funcional)
 
         String directorio = "/home/dam1/Documentos/ENDERMAITER/COD/BotDiscord/src/main/java/images";
         File carpeta = new File(directorio);
@@ -84,16 +82,34 @@ public class BotMain {
                 }
             });
 
-        //OBTENER IMAGEN
+        //OBTENER IMAGEN(BETA)
 
         EmbedCreateSpec embedImagen = EmbedCreateSpec.builder()
-                .image()
+                //.image()
                 .build();
         gateway.on(MessageCreateEvent.class).subscribe(event -> {
             final Message message = event.getMessage();
             if ("/get shreck.jpg".equals(message.getContent())) {
                 final MessageChannel channel = message.getChannel().block();
                 channel.createMessage("Pong").block();
+            }
+        });
+
+        //COMANDO HELP(Funcional)
+
+        EmbedCreateSpec embedHelp = EmbedCreateSpec.builder()
+                .color(Color.BLUE)
+                .title("AYUDA")
+                .addField("Comandos", "/ping\n/embed\n/gif\n/list\n/get [imagen]", true)
+                .timestamp(Instant.now())
+                .footer("COD", "")
+                .build();
+
+        gateway.on(MessageCreateEvent.class).subscribe(event -> {
+            final Message message = event.getMessage();
+            if ("/help".equals(message.getContent())) {
+                final MessageChannel channel = message.getChannel().block();
+                channel.createMessage(embedHelp).block();
             }
         });
 

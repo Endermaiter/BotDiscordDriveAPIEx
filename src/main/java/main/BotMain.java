@@ -19,6 +19,8 @@ public class BotMain {
         final DiscordClient client = DiscordClient.create(token);
         final GatewayDiscordClient gateway = client.login().block();
 
+
+
         //ping pong
 
         gateway.on(MessageCreateEvent.class).subscribe(event -> {
@@ -56,7 +58,16 @@ public class BotMain {
 
         //GIFS
 
-
+        EmbedCreateSpec embedGIF = EmbedCreateSpec.builder()
+                .image("https://c.tenor.com/ZU3owNOylsEAAAAC/el-baile-de-el-troleo.gif")
+                .build();
+        gateway.on(MessageCreateEvent.class).subscribe(event -> {
+            final Message message = event.getMessage();
+            if ("/gif".equals(message.getContent())) {
+                final MessageChannel channel = message.getChannel().block();
+                channel.createMessage(embedGIF).block();
+            }
+        });
 
         //LISTAR FICHEROS
 
@@ -75,7 +86,16 @@ public class BotMain {
 
         //OBTENER IMAGEN
 
-
+        EmbedCreateSpec embedImagen = EmbedCreateSpec.builder()
+                .image()
+                .build();
+        gateway.on(MessageCreateEvent.class).subscribe(event -> {
+            final Message message = event.getMessage();
+            if ("/get shreck.jpg".equals(message.getContent())) {
+                final MessageChannel channel = message.getChannel().block();
+                channel.createMessage("Pong").block();
+            }
+        });
 
         gateway.onDisconnect().block();
     }

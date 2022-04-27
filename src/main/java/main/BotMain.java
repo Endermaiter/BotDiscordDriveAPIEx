@@ -1,6 +1,6 @@
 package main;
 
-import discord4j.common.util.Snowflake;
+
 import discord4j.core.DiscordClient;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
@@ -85,13 +85,17 @@ public class BotMain {
         //OBTENER IMAGEN(BETA)
 
         EmbedCreateSpec embedImagen = EmbedCreateSpec.builder()
-                //.image()
+                .color(Color.GREEN)
+                .title("Yoda")
+                .image("attachment:///home/dam1/Documentos/ENDERMAITER/COD/ImagenesBot/shreck2.jpeg")
                 .build();
+
+
         gateway.on(MessageCreateEvent.class).subscribe(event -> {
             final Message message = event.getMessage();
-            if ("/get shreck.jpg".equals(message.getContent())) {
+            if ("/get shreck2.jpeg".equals(message.getContent())) {
                 final MessageChannel channel = message.getChannel().block();
-                channel.createMessage("Pong").block();
+                channel.createMessage(embedImagen).block();
             }
         });
 

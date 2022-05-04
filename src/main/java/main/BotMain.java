@@ -64,7 +64,9 @@ public class BotMain {
      */
 
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
+
         // Load client secrets.
+
         InputStream in = BotMain.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
@@ -72,6 +74,7 @@ public class BotMain {
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
         // Build flow and trigger user authorization request.
+
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
                 .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
@@ -79,7 +82,9 @@ public class BotMain {
                 .build();
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
         Credential credential = new AuthorizationCodeInstalledApp(flow, receiver).authorize("736476175694-qnbtukpdshk30equ1rl43fb20g8fabsn.apps.googleusercontent.com");
+
         //returns an authorized Credential object.
+
         return credential;
     }
 
@@ -192,12 +197,14 @@ public class BotMain {
         //GOOGLE CODE
 
         // Build a new authorized API client service.
+
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
 
         // Filtra para encontrar la carpeta que se llama imagenesBot
+
         FileList result = service.files().list()
                 .setQ("name contains 'imagenesBot' and mimeType = 'application/vnd.google-apps.folder'")
                 .setPageSize(100)
@@ -215,18 +222,25 @@ public class BotMain {
                 System.out.printf("%s (%s)\n", file.getName(), file.getId());
                 dirImagenes = file.getId();
             }
+
             // busco la imagen en el directorio
+
             FileList resultImagenes = service.files().list()
                     .setQ("name contains 'shreck' and parents in '"+dirImagenes+"'")
                     .setSpaces("drive")
                     .setFields("nextPageToken, files(id, name)")
                     .execute();
             List<com.google.api.services.drive.model.File> filesImagenes = resultImagenes.getFiles();
+
+            //GOOGLE + DISCORD(Funcional)
+
             gateway.on(MessageCreateEvent.class).subscribe(event -> {
                 final Message message = event.getMessage();
                 if ("/listado".equals(message.getContent())) {
                     for (com.google.api.services.drive.model.File file : filesImagenes) {
+
                         // guardamos el 'stream' en el fichero aux.jpeg que tiene que existir
+
                         OutputStream outputStream = null;
                         try {
                             outputStream = new FileOutputStream("/home/dam1/Documentos/ENDERMAITER/COD/DriveAPI/src/main/java/images/aux.jpeg");
@@ -254,8 +268,6 @@ public class BotMain {
                     }
                 }
             });
-
-            //GOOGLE + DISCORD
 
             gateway.onDisconnect().block();
         }

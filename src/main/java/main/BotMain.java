@@ -33,6 +33,8 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 
+//CODE
+
 public class BotMain {
 
     //GOOGLE CREDENTIALS
@@ -229,6 +231,11 @@ public class BotMain {
                 outputStream.flush();
                 outputStream.close();
             }
+
+            //GOOGLE + DISCORD
+
+
+
             gateway.onDisconnect().block();
         }
     }

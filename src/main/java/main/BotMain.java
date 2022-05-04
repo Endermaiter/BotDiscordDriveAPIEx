@@ -222,19 +222,40 @@ public class BotMain {
                     .setFields("nextPageToken, files(id, name)")
                     .execute();
             List<com.google.api.services.drive.model.File> filesImagenes = resultImagenes.getFiles();
-            for (com.google.api.services.drive.model.File file : filesImagenes) {
-                System.out.printf("Imagen: %s\n", file.getName());
-                // guardamos el 'stream' en el fichero aux.jpeg que tiene que existir
-                OutputStream outputStream = new FileOutputStream("/home/dam1/Documentos/ENDERMAITER/COD/DriveAPI/src/main/java/images/aux.jpeg");
-                service.files().get(file.getId())
-                        .executeMediaAndDownloadTo(outputStream);
-                outputStream.flush();
-                outputStream.close();
-            }
+            gateway.on(MessageCreateEvent.class).subscribe(event -> {
+                final Message message = event.getMessage();
+                if ("/listado".equals(message.getContent())) {
+                    for (com.google.api.services.drive.model.File file : filesImagenes) {
+                        // guardamos el 'stream' en el fichero aux.jpeg que tiene que existir
+                        OutputStream outputStream = null;
+                        try {
+                            outputStream = new FileOutputStream("/home/dam1/Documentos/ENDERMAITER/COD/DriveAPI/src/main/java/images/aux.jpeg");
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            service.files().get(file.getId())
+                                    .executeMediaAndDownloadTo(outputStream);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            outputStream.flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            outputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        final MessageChannel channel = message.getChannel().block();
+                        channel.createMessage("Imagen de mi Drive: "+file.getName()).block();
+                    }
+                }
+            });
 
             //GOOGLE + DISCORD
-
-
 
             gateway.onDisconnect().block();
         }

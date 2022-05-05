@@ -164,7 +164,7 @@ public class BotMain {
         EmbedCreateSpec embedImagen = EmbedCreateSpec.builder()
                 .color(Color.GREEN)
                 .title("Yoda")
-                .image("attachment:///home/dam1/Documentos/ENDERMAITER/COD/ImagenesBot/shreck2.jpeg")
+                .image("attachment://home/dam1/Documentos/ENDERMAITER/COD/ImagenesBot/shreck2.jpeg")
                 .build();
 
 
@@ -234,6 +234,8 @@ public class BotMain {
 
             //GOOGLE + DISCORD(Funcional)
 
+
+
             gateway.on(MessageCreateEvent.class).subscribe(event -> {
                 final Message message = event.getMessage();
                 if ("/listado".equals(message.getContent())) {
@@ -263,11 +265,20 @@ public class BotMain {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        System.out.println(file.getId());
+                        EmbedCreateSpec embedDrive = EmbedCreateSpec.builder()
+                                .color(Color.BLUE)
+                                .title("Imagenes Drive")
+                                .addField("Imagenes de Drive:\n",file.getName(),true)
+                                .image("https://drive.google.com/file/d/"+file.getId()+"/view?usp=sharing")
+                                .timestamp(Instant.now())
+                                .build();
                         final MessageChannel channel = message.getChannel().block();
-                        channel.createMessage("Imagen de mi Drive: "+file.getName()).block();
+                        channel.createMessage(embedDrive).block();
                     }
                 }
             });
+
 
             gateway.onDisconnect().block();
         }

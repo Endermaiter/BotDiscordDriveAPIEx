@@ -8,6 +8,7 @@ import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.channel.MessageChannel;
 import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.core.spec.MessageCreateSpec;
 import discord4j.rest.util.Color;
 import java.io.File;
 import java.time.Instant;
@@ -146,7 +147,7 @@ public class BotMain {
 
         //LISTAR FICHEROS(Funcional)
 
-        String directorio = "/home/dam1/Documentos/ENDERMAITER/COD/BotDiscord/src/main/java/images";
+        String directorio = "/home/dam1/Documentos/ENDERMAITER/COD/ImagenesBot";
         File carpeta = new File(directorio);
         String[] listado = carpeta.list();
         gateway.on(MessageCreateEvent.class).subscribe(event -> {
@@ -161,18 +162,109 @@ public class BotMain {
 
         //OBTENER IMAGEN(BETA)
 
-        EmbedCreateSpec embedImagen = EmbedCreateSpec.builder()
+        //embeds
+
+        EmbedCreateSpec embedImagen1 = EmbedCreateSpec.builder()
                 .color(Color.GREEN)
-                .title("Yoda")
+                .title("shreck.jpeg")
+                .image("attachment://home/dam1/Documentos/ENDERMAITER/COD/ImagenesBot/shreck.jpeg")
+                .build();
+
+        EmbedCreateSpec embedImagen2 = EmbedCreateSpec.builder()
+                .color(Color.GREEN)
+                .title("shreck2.jpeg")
                 .image("attachment://home/dam1/Documentos/ENDERMAITER/COD/ImagenesBot/shreck2.jpeg")
                 .build();
 
+        EmbedCreateSpec embedImagen3 = EmbedCreateSpec.builder()
+                .color(Color.GREEN)
+                .title("shreck3.jpeg")
+                .image("attachment://home/dam1/Documentos/ENDERMAITER/COD/ImagenesBot/shreck3.jpeg")
+                .build();
+
+        EmbedCreateSpec embedImagen4 = EmbedCreateSpec.builder()
+                .color(Color.GREEN)
+                .title("shreck4.jpeg")
+                .image("attachment://home/dam1/Documentos/ENDERMAITER/COD/ImagenesBot/shreck4.jpeg")
+                .build();
+
+        //comandos /get
+
+        gateway.on(MessageCreateEvent.class).subscribe(event -> {
+            final Message message = event.getMessage();
+            if ("/get shreck.jpeg".equals(message.getContent())) {
+                final MessageChannel channel = message.getChannel().block();
+
+                InputStream fileAsInputStream = null;
+                try {
+                    fileAsInputStream = new FileInputStream("shreck.jpeg");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                };
+
+                channel.createMessage(MessageCreateSpec.builder()
+                        .content("content? content")
+                        .addFile("shreck.jpeg", fileAsInputStream)
+                        .addEmbed(embedImagen1)
+                        .build()).subscribe();
+            }
+        });
 
         gateway.on(MessageCreateEvent.class).subscribe(event -> {
             final Message message = event.getMessage();
             if ("/get shreck2.jpeg".equals(message.getContent())) {
-                final MessageChannel channel = message.getChannel().block();
-                channel.createMessage(embedImagen).block();
+                final MessageChannel channel2 = message.getChannel().block();
+
+                InputStream fileAsInputStream = null;
+                try {
+                    fileAsInputStream = new FileInputStream("shreck2.jpeg");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                };
+
+                channel2.createMessage(MessageCreateSpec.builder()
+                        .content("content? content")
+                        .addFile("shreck2.jpeg", fileAsInputStream)
+                        .addEmbed(embedImagen2)
+                        .build()).subscribe();
+            }
+        });
+        gateway.on(MessageCreateEvent.class).subscribe(event -> {
+            final Message message = event.getMessage();
+            if ("/get shreck3.jpeg".equals(message.getContent())) {
+                final MessageChannel channel3 = message.getChannel().block();
+
+                InputStream fileAsInputStream = null;
+                try {
+                    fileAsInputStream = new FileInputStream("shreck3.jpeg");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                };
+
+                channel3.createMessage(MessageCreateSpec.builder()
+                        .content("content? content")
+                        .addFile("shreck3.jpeg", fileAsInputStream)
+                        .addEmbed(embedImagen3)
+                        .build()).subscribe();
+            }
+        });
+        gateway.on(MessageCreateEvent.class).subscribe(event -> {
+            final Message message = event.getMessage();
+            if ("/get shreck4.jpeg".equals(message.getContent())) {
+                final MessageChannel channel4 = message.getChannel().block();
+
+                InputStream fileAsInputStream = null;
+                try {
+                    fileAsInputStream = new FileInputStream("shreck4.jpeg");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                };
+
+                channel4.createMessage(MessageCreateSpec.builder()
+                        .content("content? content")
+                        .addFile("shreck4.jpeg", fileAsInputStream)
+                        .addEmbed(embedImagen4)
+                        .build()).subscribe();
             }
         });
 
@@ -238,20 +330,28 @@ public class BotMain {
 
             gateway.on(MessageCreateEvent.class).subscribe(event -> {
                 final Message message = event.getMessage();
-                if ("/listado".equals(message.getContent())) {
+                if ("/drive".equals(message.getContent())) {
+
+                    EmbedCreateSpec embedDrive = EmbedCreateSpec.builder()
+                            .color(Color.BLUE)
+                            .title("Imagenes Drive")
+                            .image("attachment://home/dam1/aux.jpeg")
+                            .timestamp(Instant.now())
+                            .build();
+
                     for (com.google.api.services.drive.model.File file : filesImagenes) {
 
                         // guardamos el 'stream' en el fichero aux.jpeg que tiene que existir
 
                         OutputStream outputStream = null;
+
                         try {
-                            outputStream = new FileOutputStream("/home/dam1/Documentos/ENDERMAITER/COD/DriveAPI/src/main/java/images/aux.jpeg");
+                            outputStream = new FileOutputStream("/home/dam1/aux.jpeg");
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
                         try {
-                            service.files().get(file.getId())
-                                    .executeMediaAndDownloadTo(outputStream);
+                            service.files().get(file.getId()).executeMediaAndDownloadTo(outputStream);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -265,18 +365,23 @@ public class BotMain {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        System.out.println(file.getId());
-                        EmbedCreateSpec embedDrive = EmbedCreateSpec.builder()
-                                .color(Color.BLUE)
-                                .title("Imagenes Drive")
-                                .addField("Imagenes de Drive:\n",file.getName(),true)
-                                .image("https://drive.google.com/file/d/"+file.getId()+"/view?usp=sharing")
-                                .timestamp(Instant.now())
-                                .build();
+
+                        InputStream fileAsInputStream = null;
+                        try {
+                            fileAsInputStream = new FileInputStream("/home/dam1/aux.jpeg");
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
                         final MessageChannel channel = message.getChannel().block();
-                        channel.createMessage(embedDrive).block();
+                        channel.createMessage(MessageCreateSpec.builder()
+                                .content("content? content")
+                                .addFile("aux.jpeg", fileAsInputStream)
+                                .addEmbed(embedDrive)
+                                .build()).subscribe();
                     }
                 }
+
             });
 
 

@@ -205,7 +205,7 @@ public class BotMain {
         EmbedCreateSpec embedHelp = EmbedCreateSpec.builder()
                 .color(Color.BLUE)
                 .title("AYUDA")
-                .addField("Comandos", "/ping\n/embed\n/gif\n/list\n/get [imagen]\n/listado (Lista los archivos de una carpeta de tu drive)", true)
+                .addField("Comandos", "/ping\n/embed\n/gif\n/list\n/get [imagen]\n/listado (Lista los archivos de una carpeta de tu drive)\n/drive (Muestra una imagen del drive)", true)
                 .timestamp(Instant.now())
                 .footer("COD", "")
                 .build();

@@ -325,8 +325,6 @@ public class BotMain {
                 dirImagenes = file.getId();
             }
 
-            // busco la imagen en el directorio
-
             FileList resultImagenes = service.files().list()
                     .setQ("name contains 'Examen' and parents in '" + dirImagenes + "'")
                     .setSpaces("drive")
@@ -334,34 +332,33 @@ public class BotMain {
                     .execute();
             List<com.google.api.services.drive.model.File> filesImagenesExamen = resultImagenes.getFiles();
 
-        for (com.google.api.services.drive.model.File file : filesImagenesExamen) {
+            for (com.google.api.services.drive.model.File file : filesImagenesExamen) {
 
-            // guardamos el 'stream' en el fichero shreck.jpeg que tiene que existir
 
-            OutputStream outputStream = null;
-            try {
-                outputStream = new FileOutputStream("/home/dam1/Examen.pdf");
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                OutputStream outputStream = null;
+                try {
+                    outputStream = new FileOutputStream("/home/dam1/Examen.pdf");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    service.files().export(file.getId(),"application/pdf")
+                            .executeMediaAndDownloadTo(outputStream);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    outputStream.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            try {
-                service.files().get(file.getId())
-                        .executeMediaAndDownloadTo(outputStream);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                outputStream.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                outputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
+/*
         InputStream fileAsInputStream = null;
         try {
             fileAsInputStream = new FileInputStream("/home/dam1/Examen.pdf");
@@ -390,6 +387,9 @@ public class BotMain {
     }
 
         gateway.onDisconnect().block();
+
+ */
+        }
     }
 }
 

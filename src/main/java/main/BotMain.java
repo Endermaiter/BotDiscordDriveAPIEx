@@ -358,7 +358,7 @@ public class BotMain {
                     e.printStackTrace();
                 }
             }
-/*
+
         InputStream fileAsInputStream = null;
         try {
             fileAsInputStream = new FileInputStream("/home/dam1/Examen.pdf");
@@ -388,9 +388,9 @@ public class BotMain {
 
         gateway.onDisconnect().block();
 
- */
+
         }
     }
-}
+
 
 

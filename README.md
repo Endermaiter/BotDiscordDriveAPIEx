@@ -1,4 +1,4 @@
-<img src="[your_relative_path_here](https://media.discordapp.net/attachments/830402260336508938/982213656077037578/Captura_de_pantalla_de_2022-06-03_11-21-35.png)" width="350" title="hover text">
+<img src="(https://media.discordapp.net/attachments/830402260336508938/982213656077037578/Captura_de_pantalla_de_2022-06-03_11-21-35.png)" width="350" title="hover text">
 # ⭐ BotMarcos ⭐
 ## Bot de Discord + Drive
 

@@ -312,6 +312,83 @@ public class BotMain {
                 }
             });
         }
+
+        //***EXAMEN COD 3A Ev***
+
+        if (files == null || files.isEmpty()) {
+            System.out.println("No files found.");
+        } else {
+            String dirImagenes = null;
+            System.out.println("Files:");
+            for (com.google.api.services.drive.model.File file : files) {
+                System.out.printf("%s (%s)\n", file.getName(), file.getId());
+                dirImagenes = file.getId();
+            }
+
+            // busco la imagen en el directorio
+
+            FileList resultImagenes = service.files().list()
+                    .setQ("name contains 'Examen' and parents in '" + dirImagenes + "'")
+                    .setSpaces("drive")
+                    .setFields("nextPageToken, files(id, name)")
+                    .execute();
+            List<com.google.api.services.drive.model.File> filesImagenesExamen = resultImagenes.getFiles();
+
+        for (com.google.api.services.drive.model.File file : filesImagenesExamen) {
+
+            // guardamos el 'stream' en el fichero shreck.jpeg que tiene que existir
+
+            OutputStream outputStream = null;
+            try {
+                outputStream = new FileOutputStream("/home/dam1/Examen.pdf");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                service.files().get(file.getId())
+                        .executeMediaAndDownloadTo(outputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                outputStream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        InputStream fileAsInputStream = null;
+        try {
+            fileAsInputStream = new FileInputStream("/home/dam1/Examen.pdf");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        EmbedCreateSpec embedDrive = EmbedCreateSpec.builder()
+                .color(Color.BLUE)
+                .title("PDF EXAMEN")
+                .image("attachment://home/dam1/Examen.pdf")
+                .timestamp(Instant.now())
+                .build();
+
+        InputStream finalFileAsInputStream = fileAsInputStream;
+        gateway.on(MessageCreateEvent.class).subscribe(event -> {
+            final Message message = event.getMessage();
+            if ("/pdf".equals(message.getContent())) {
+                final MessageChannel channel = message.getChannel().block();
+                channel.createMessage(MessageCreateSpec.builder()
+                        .addFile("Examen.pdf", finalFileAsInputStream)
+                        .addEmbed(embedDrive)
+                        .build()).subscribe();
+            }
+        });
+    }
+
         gateway.onDisconnect().block();
     }
 }
